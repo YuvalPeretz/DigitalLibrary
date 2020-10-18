@@ -1,0 +1,406 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DE11AC3C-99F8-4950-A8F3-A34E4D0DF26B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>DigitalLibrary</RootNamespace>
+    <AssemblyName>DigitalLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>digitallibrarylogo_sKD_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>DigitalLibrary.App</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>
+    </TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>6DC78C2FEDE6FBF47A034F4560267D42EBCC2B79</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Models\Classes\Abstract\TextHandlerBase.cs" />
+    <Compile Include="Models\Classes\Common\BookBorrowed.cs" />
+    <Compile Include="Models\Classes\Useable\StaticInformationHandler.cs" />
+    <Compile Include="Models\Interfaces\ITextHandler.cs" />
+    <Compile Include="Views\UserControls\ConsoleText.xaml.cs">
+      <DependentUpon>ConsoleText.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\UC_Book.xaml.cs">
+      <DependentUpon>UC_Book.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Books\BooksAdd.xaml.cs">
+      <DependentUpon>BooksAdd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Books\BooksDelete.xaml.cs">
+      <DependentUpon>BooksDelete.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Books\BooksFindStudent.xaml.cs">
+      <DependentUpon>BooksFindStudent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Books\BooksInfoUpdate\BooksInfoUpdate.xaml.cs">
+      <DependentUpon>BooksInfoUpdate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Books\BooksInfoUpdate\EditWindow.xaml.cs">
+      <DependentUpon>EditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Books\BooksList.xaml.cs">
+      <DependentUpon>BooksList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Books\BooksWindow.xaml.cs">
+      <DependentUpon>BooksWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Settings\Info\InfoWindow.xaml.cs">
+      <DependentUpon>InfoWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Settings\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Students\StudentDelete.xaml.cs">
+      <DependentUpon>StudentDelete.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Students\StudentsAdd.xaml.cs">
+      <DependentUpon>StudentsAdd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Students\StudentsInfoUpdate\EditWindow.xaml.cs">
+      <DependentUpon>EditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Students\StudentsInfoUpdate\StudentsInfoUpdate.xaml.cs">
+      <DependentUpon>StudentsInfoUpdate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Students\StudentsLendBook\LendBookWindow.xaml.cs">
+      <DependentUpon>LendBookWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Students\StudentsLendBook\StudentsLendBook.xaml.cs">
+      <DependentUpon>StudentsLendBook.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Students\StudentsList.xaml.cs">
+      <DependentUpon>StudentsList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Students\StudentsReturnBook.xaml.cs">
+      <DependentUpon>StudentsReturnBook.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Mains\Students\StudentsWindow.xaml.cs">
+      <DependentUpon>StudentsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Tutorials\MainTutorialFrameWindow.xaml.cs">
+      <DependentUpon>MainTutorialFrameWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Tutorials\Pages\BooksWindowPage.xaml.cs">
+      <DependentUpon>BooksWindowPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Tutorials\Pages\EndPage.xaml.cs">
+      <DependentUpon>EndPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Tutorials\Pages\ImportantToKnowPage.xaml.cs">
+      <DependentUpon>ImportantToKnowPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Tutorials\Pages\InfoSavingPage.xaml.cs">
+      <DependentUpon>InfoSavingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Tutorials\Pages\MainWindowPage.xaml.cs">
+      <DependentUpon>MainWindowPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Tutorials\Pages\StudentsWindowPage.xaml.cs">
+      <DependentUpon>StudentsWindowPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\Tutorials\Pages\WelcomePage.xaml.cs">
+      <DependentUpon>WelcomePage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Views\Resources\HoverTransparent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\ConsoleText.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\UC_Book.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Books\BooksAdd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Books\BooksDelete.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Books\BooksFindStudent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Books\BooksInfoUpdate\BooksInfoUpdate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Books\BooksInfoUpdate\EditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Books\BooksList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Books\BooksWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Settings\Info\InfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Settings\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Students\StudentDelete.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Students\StudentsAdd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Students\StudentsInfoUpdate\EditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Students\StudentsInfoUpdate\StudentsInfoUpdate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Students\StudentsLendBook\LendBookWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Students\StudentsLendBook\StudentsLendBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Students\StudentsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Students\StudentsReturnBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Mains\Students\StudentsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Tutorials\MainTutorialFrameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Tutorials\Pages\BooksWindowPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Tutorials\Pages\EndPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Tutorials\Pages\ImportantToKnowPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Tutorials\Pages\InfoSavingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Tutorials\Pages\MainWindowPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Tutorials\Pages\StudentsWindowPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\Tutorials\Pages\WelcomePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Classes\Common\Book.cs" />
+    <Compile Include="Models\Classes\Useable\Paths.cs" />
+    <Compile Include="Models\Classes\Common\Student.cs" />
+    <Compile Include="Models\Classes\Useable\MainFilesHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="DigitalLibrary_TemporaryKey.pfx" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Images\student_manimalist.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\exit_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\book_manimalist.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\settings_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\info_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Back_Off_Icon.png" />
+    <Resource Include="Resources\Images\Back_On_Icon.png" />
+    <Resource Include="Resources\Images\Next_Off_Icon.png" />
+    <Resource Include="Resources\Images\Next_On_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\MainWindow_Image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\BooksWindow_Image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\BooksWindow_ConsoleUpdate_Image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\StudentsWindow_Image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="digitallibrarylogo_sKD_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DigitalLibraryLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Installers\NDP472-KB4054531-Web.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

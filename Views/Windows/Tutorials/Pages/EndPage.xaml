@@ -1,0 +1,47 @@
+﻿<Page x:Class="DigitalLibrary.Views.Windows.Tutorials.Pages.EndPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DigitalLibrary.Views.Windows.Tutorials.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450"
+      d:DesignWidth="800"
+      FontFamily="Georgia Pro Black"
+      FontSize="20"
+      Title="EndPage">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DigitalLibrary;component/Views/Resources/HoverTransparent.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
+        <StackPanel
+            Orientation="Vertical"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock 
+                TextAlignment="Center"
+                FlowDirection="RightToLeft">
+                כעת סיימתם את המדריך,
+                <LineBreak/>
+                <LineBreak/>
+                במידה ותרצו לצפות בו שוב, כנסו להגדרות,
+                <LineBreak/>ובחרו בכפתור ה"מדריך" כך שיפעל.
+                <LineBreak/>ולאחר מכן הפעילו מחדש את התוכנה.
+                <LineBreak/>
+                <LineBreak/>
+            </TextBlock>
+            <Button
+                x:Name="BTN_EndTutorial"
+                Content="סיים"
+                Background="AliceBlue"
+                Width="70"
+                Margin="0,0,0,20"
+                Click="BTN_EndTutorial_Click"
+                Style="{StaticResource ResourceKey=HoverTransparent}"/>
+        </StackPanel>
+    </Grid>
+</Page>

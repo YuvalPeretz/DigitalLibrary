@@ -1,0 +1,129 @@
+﻿<Window x:Class="DigitalLibrary.Views.Windows.Mains.Books.BooksDelete"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DigitalLibrary.Views.Windows.Mains.Books"
+        mc:Ignorable="d"
+        Title="BooksDelete"
+        Width="650"
+        MinWidth="650"
+        MaxWidth="650"
+        Height="300"
+        MaxHeight="300"
+        MinHeight="300"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFFFCC8F"
+        FlowDirection="RightToLeft"
+        WindowStyle="None"
+        FontFamily="Georgia Pro Black"
+        Visibility="Visible"
+        MouseDown="Window_MouseDown">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DigitalLibrary;component/Views/Resources/HoverTransparent.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel
+            Grid.Row="0"
+            Margin="0,30,0,0"
+            Orientation="Horizontal"
+            HorizontalAlignment="Center">
+
+            <TextBlock
+                Text="חיפוש ספר:"
+                FontSize="20"/>
+
+            <ComboBox
+                x:Name="CB_Filter"
+                Margin="10,0,10,0"
+                Width="100"
+                FontSize="15"
+                IsEnabled="False"
+                SelectedIndex="0">
+                <ComboBoxItem FontSize="15" Content="שם ספר"/>
+                <ComboBoxItem FontSize="15" Content="ז'אנר"/>
+                <ComboBoxItem FontSize="15" Content="הוצל''א"/>
+                <ComboBoxItem FontSize="15" Content="מחבר"/>
+                <ComboBoxItem FontSize="15" Content="כמות"/>
+            </ComboBox>
+            <TextBox
+                x:Name="TB_SearchBox"
+                Width="250"
+                FontSize="15"
+                IsEnabled="False"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                TextChanged="TB_SearchBox_TextChanged"/>
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="1"
+            Margin="66,30,19,0"
+            Orientation="Horizontal"
+            HorizontalAlignment="Center">
+
+            <DataGrid
+                    x:Name="DG_BooksList"
+                    FontSize="20"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    AutoGenerateColumns="False"
+                Height="170"
+                MaxHeight="170"
+                Width="470"
+                MaxWidth="470"
+                HorizontalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="תמונה">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Img}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding BookName}" Header="שם ספר"/>
+                    <DataGridTextColumn Binding="{Binding Genre}" Header="ז'אנר"/>
+                    <DataGridTextColumn Binding="{Binding Published, StringFormat=d}" Header="הוצל''א"/>
+                    <DataGridTextColumn Binding="{Binding Author}" Header="מחבר"/>
+                    <DataGridTextColumn Binding="{Binding Quantity}" Header="כמות"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Button
+                x:Name="BTN_Delete"
+                Click="BTN_Delete_Click"
+                Width="70"
+                Height="30"
+                Margin="5,0,0,0"
+                Content="הסר"
+                IsDefault="True"
+                FontSize="20"/>
+        </StackPanel>
+
+        <Button   
+            x:Name="BTN_Exit"
+            Grid.Row="1"
+            Click="BTN_Exit_Click"   
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Right"
+            Style="{StaticResource ResourceKey=HoverTransparent}">
+            <Button.Template>
+                <ControlTemplate>
+                    <Image 
+                        Source="/DigitalLibrary;component/Resources/Images/exit_icon.png"
+                        Height="35"
+                        Width="35"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </Grid>
+</Window>
