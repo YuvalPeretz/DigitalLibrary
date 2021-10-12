@@ -99,6 +99,7 @@ namespace DigitalLibrary.Views.Windows.Mains.Students.StudentsLendBook
                     logo.DecodePixelHeight = 25;
                     logo.DecodePixelWidth = 25;
                     logo.EndInit();
+                    logo.Freeze();
                     newbl.Add(
                         new Book(
                             book.BookName,
