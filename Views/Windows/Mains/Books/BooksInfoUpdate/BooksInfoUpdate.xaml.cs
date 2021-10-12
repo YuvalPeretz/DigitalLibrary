@@ -96,6 +96,7 @@ namespace DigitalLibrary.Views.Windows.Mains.Books.BooksInfoUpdate
                     logo.DecodePixelHeight = 25;
                     logo.DecodePixelWidth = 25;
                     logo.EndInit();
+                    logo.Freeze();
                     newbl.Add(
                         new Book(
                             book.BookName,

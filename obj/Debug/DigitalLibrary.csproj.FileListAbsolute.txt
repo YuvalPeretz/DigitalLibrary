@@ -70,3 +70,4 @@ D:\ספרייה דיגיטלית\DigitalLibrary\DigitalLibrary\obj\Debug\Views\W
 D:\ספרייה דיגיטלית\DigitalLibrary\DigitalLibrary\obj\Debug\Views\Windows\Mains\Books\BooksFindStudent.g.cs
 D:\ספרייה דיגיטלית\DigitalLibrary\DigitalLibrary\obj\Debug\Views\Windows\Mains\Books\BooksFindStudent.baml
 D:\ספרייה דיגיטלית\DigitalLibrary\DigitalLibrary\obj\Debug\DigitalLibrary_Content.g.cs
+D:\ספרייה דיגיטלית\DigitalLibrary\DigitalLibrary\obj\Debug\DigitalLibrary.csproj.AssemblyReference.cache

@@ -83,7 +83,7 @@ namespace DigitalLibrary.Models.Classes.Common
         }
         public void AddBook(Book newBook)
         {
-            // After receiving a new book to add, checks if any other book has tthe same name,genre and author
+            // After receiving a new book to add, checks if any other book has the same name,genre and author
             // Only if non has the same values, will add the book to the text file
 
             BW = Application.Current.Windows.OfType<BooksWindow>().First(); // Inorder to WriteToConsole
