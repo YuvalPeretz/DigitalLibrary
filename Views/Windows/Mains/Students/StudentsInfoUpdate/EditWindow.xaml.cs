@@ -21,26 +21,20 @@ namespace DigitalLibrary.Views.Windows.Mains.Students.StudentsInfoUpdate
     public partial class EditWindow : Window
     {
         Student studentHolder, studentToEdit, s = Student.Instance;
-        StudentsWindow SW;
         public EditWindow(Student studentToEdit)
         {
             InitializeComponent();
-            studentHolder = studentToEdit; // holds the information of the student for later use in the UpdateInfo function
+            studentHolder = studentToEdit;
             this.studentToEdit = studentToEdit;
             InitializeData();
         }
         private void InitializeData()
         {
-            // Initialize the fields in the window to match those of the student
-
             TB_Name.Text = studentHolder.Name;
             TB_PhoneNum.Text = studentHolder.PhoneNum;
         }
         private void BTN_EditBook_Click(object sender, RoutedEventArgs e)
         {
-            // After editing a student, a message will be printed on the console
-            // Which describes the changes that were made
-
             string changedS = null;
             if (!TB_Name.Text.Equals(studentHolder.Name) ||
                 !TB_PhoneNum.Text.Equals(studentHolder.PhoneNum))
@@ -50,24 +44,15 @@ namespace DigitalLibrary.Views.Windows.Mains.Students.StudentsInfoUpdate
                     changedS = $"המידה שהשתנה בתלמיד {studentHolder.Name} הוא:\n";
                     if (!TB_Name.Text.Equals(studentHolder.Name))
                     {
-                        changedS += $"שם התלמיד השתנה מ '{studentHolder.Name}' ל '{TB_Name.Text}'\n";
+                        changedS += $"שם התלמיד השתנה מ {studentHolder.Name} ל {TB_Name.Text}\n";
                         studentToEdit.Name = TB_Name.Text;
                     }
                     if (!TB_PhoneNum.Text.Equals(studentHolder.PhoneNum))
                     {
-                        changedS += $"מספר הטלפון של התלמיד השתנה מ '{studentHolder.PhoneNum}' ל '{TB_PhoneNum.Text}'\n";
+                        changedS += $"מספר הטלפון של התלמיד השתנה מ {studentHolder.PhoneNum} ל {TB_PhoneNum.Text}\n";
                         studentToEdit.PhoneNum = TB_PhoneNum.Text;
                     }
-                    Task tUpdateInfo = Task.Run(()=> 
-                    { 
-                        s.UpdateInfo(studentHolder,studentToEdit);
-                    });
-                    tUpdateInfo.GetAwaiter().OnCompleted(()=> 
-                    {
-                        SW = Application.Current.Windows.OfType<StudentsWindow>().First();
-                        SW.WriteToConsole(changedS);
-                        this.Close();
-                    });
+                    s.UpdateInfo(studentHolder,studentToEdit);
                 }
             }
         }

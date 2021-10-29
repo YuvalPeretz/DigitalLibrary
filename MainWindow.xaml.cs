@@ -35,56 +35,21 @@ namespace DigitalLibrary
     {
         StaticInformationHandler SIH = StaticInformationHandler.Instance;
         Window BW, SW, MW, STW, TW;
-        MainFilesHandler MFH = MainFilesHandler.Instance;
+        TextFileHandler TFH = TextFileHandler.Instance;
 
         public MainWindow()
         {
-            // If any problem comes up at the startiung of the app, the application will delete all information from the static file and try again
-            // If after two attempts the applicaiton will still won't open, the application will open an email to send to the developer
-
-            try
-            {
-                SIH.InitializeFiles();
-                Paths.InitializeSettings();
-                FrameworkInstall();
-                InitializeComponent();
-                MW = (MainWindow)Window.GetWindow(this);
-                MFH.InitializeFilesWithoutWriting();
-                TutorialStart();
-            }
-            catch (Exception)
-            {
-                try
-                {
-                    if (MessageBox.Show("אוי, משהו קרה והתוכנה נכשלה, האם לנסות לתקן?", "Error", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-                        File.WriteAllText(Paths.tempDLFile, String.Empty);
-                        SIH.InitializeFiles();
-                        Paths.InitializeSettings();
-                        FrameworkInstall();
-                        InitializeComponent();
-                        MW = (MainWindow)Window.GetWindow(this);
-                        MFH.InitializeFilesWithoutWriting();
-                        TutorialStart();
-                    }
-                }
-                catch (Exception)
-                {
-                    if (MessageBox.Show("הייתה בעיה שוב, האם תרצו ליצור קשר עם המנהל של התוכנה?", "Error", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-                        Process.Start(@"https://mail.google.com/mail/?view=cm&fs=1&to=yuvalperetzj@gmail.com
-                        &su=ספרייה דיגיטלית - עזרה
-                        &body=יש לרשום את המייל כאן
-                        &bcc=נא לרשום כאן את כתובת המייל");
-                    }
-                }
-            }
+            SIH.InitializeMainTemp();
+            Paths.InitializeSettings();
+            FrameworkInstall();
+            InitializeComponent();
+            MW = (MainWindow)Window.GetWindow(this);
+            TFH.InitializeFilesWithoutWriting();
+            TutorialStart();
         }
 
         private void FrameworkInstall()
         {
-            // Triggers the installation of the Framework needed for this application
-
             if (!SIH.CheckLineExistens("framworkinstalled=true"))
             {
                 if (MessageBox.Show("לצורך הפעלת התוכנה נדרשת התקנה של Framework 4.7.2, האם להמשיך בתהקנה?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -107,10 +72,64 @@ namespace DigitalLibrary
             }
         }
 
+        /*private static void Get45PlusFromRegistry()
+         {
+             const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
+
+             using (RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
+             {
+                 if (ndpKey != null && ndpKey.GetValue("Release") != null)
+                 {
+                     //Do nothing if .Net 4.5 or higher is found.
+                     MessageBox.Show("You Have Installed:  .NET Framework Version: " + CheckFor45PlusVersion((int)ndpKey.GetValue("Release")));
+                     //if (MessageBox.Show("Continue With The Installaiton?", "Question", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                     //{
+                     //    string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                     //    Process.Start(path.Substring(0, path.IndexOf("bin")) + @"Resources\Installers\NDP472-KB4054531-Web.exe");
+                     //}
+                 }
+                 else
+                 {
+                     // Do something if .Net 4.5 or higher is found
+                     MessageBox.Show("This program Requires .NET Framework Version 4.5 or later. Click OK to access Microsoft official website and download .NET 4.5 framework.");
+                     if (MessageBox.Show("Continue With The Installaiton?", "Question", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                     {
+                         Process.Start(@"http://go.microsoft.com/fwlink/?LinkId=863262");
+                     }
+                 }
+             }
+         }
+
+         //string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+         //Process.Start(path.Substring(0, path.IndexOf("bin")) + @"Resources\Installers\NDP472-KB4054531-Web.exe");
+         // Checking the version using >= will enable forward compatibility.
+         private static string CheckFor45PlusVersion(int releaseKey)
+         {
+             if (releaseKey >= 461808)
+                 return "4.7.2 or later";
+             if (releaseKey >= 461308)
+                 return "4.7.1";
+             if (releaseKey >= 460798)
+                 return "4.7";
+             if (releaseKey >= 394802)
+                 return "4.6.2";
+             if (releaseKey >= 394254)
+                 return "4.6.1";
+             if (releaseKey >= 393295)
+                 return "4.6";
+             if (releaseKey >= 379893)
+                 return "4.5.2";
+             if (releaseKey >= 378675)
+                 return "4.5.1";
+             if (releaseKey >= 378389)
+                 return "4.5";
+             // This code should never execute. A non-null release key should mean
+             // that 4.5 or later is installed.
+             return "No 4.5 or later version detected";
+         }*/
+
         private void TutorialStart()
         {
-            // Triggers the start of the tutorial
-
             if (SIH.CheckLineExistens("tutorial=true"))
             {
                 if (!Application.Current.Windows.OfType<MainTutorialFrameWindow>().Any())
@@ -149,14 +168,8 @@ namespace DigitalLibrary
         }
         private void BTN_Exit_Click(object sender, RoutedEventArgs e)
         {
-            // When exiting the application, the backup will be triggerd
-
-            Task BUTask = Task.Run(()=> SIH.TriggerBackup());
-            var awaiter = BUTask.GetAwaiter();
-            awaiter.OnCompleted(()=> 
-            { 
-                Application.Current.Shutdown();
-            });
+            SIH.TriggerBackup();
+            Application.Current.Shutdown();
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {

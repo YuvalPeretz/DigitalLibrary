@@ -16,6 +16,7 @@
         WindowStyle="None"
         FontFamily="Georgia Pro Black"
         Visibility="Visible"
+        SizeChanged="Window_SizeChanged"
         MouseDown="Window_MouseDown">
     <Window.Resources>
         <ResourceDictionary>
@@ -46,12 +47,11 @@
                 Margin="10,0,10,0"
                 Width="100"
                 FontSize="15"
-                IsEnabled="False"
                 SelectionChanged="CB_Filter_SelectionChanged">
                 <ComboBoxItem FontSize="15" Content="שם ספר"/>
                 <ComboBoxItem FontSize="15" Content="ז'אנר"/>
                 <ComboBoxItem FontSize="15" Content="הוצל''א"/>
-                <ComboBoxItem FontSize="15" Content="מחבר"/>
+                <ComboBoxItem FontSize="15" Content="מוצל''א"/>
                 <ComboBoxItem FontSize="15" Content="כמות"/>
             </ComboBox>
             <TextBox
@@ -86,7 +86,7 @@
                         <DataGridTextColumn Binding="{Binding BookName}" Header="שם ספר"/>
                         <DataGridTextColumn Binding="{Binding Genre}" Header="ז'אנר"/>
                         <DataGridTextColumn Binding="{Binding Published, StringFormat=d}" Header="הוצל''א"/>
-                        <DataGridTextColumn Binding="{Binding Author}" Header="מחבר"/>
+                        <DataGridTextColumn Binding="{Binding Publisher}" Header="מוצל''א"/>
                         <DataGridTextColumn Binding="{Binding Quantity}" Header="כמות"/>
                     </DataGrid.Columns>
                 </DataGrid>

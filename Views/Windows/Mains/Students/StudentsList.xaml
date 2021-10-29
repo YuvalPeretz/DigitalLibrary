@@ -48,7 +48,6 @@
                 Margin="10,0,10,0"
                 Width="100"
                 FontSize="15"
-                IsEnabled="False"
                 SelectionChanged="CB_Filter_SelectionChanged">
                 <ComboBoxItem FontSize="15" Content="שם"/>
                 <ComboBoxItem FontSize="15" Content="טלפון"/>

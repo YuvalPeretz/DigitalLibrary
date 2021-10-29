@@ -32,129 +32,97 @@ namespace DigitalLibrary.Models.Classes.Common
 
     public class Book
     {
-        private readonly MainFilesHandler MFH = MainFilesHandler.Instance; // Used for a Singleton Design
-        private static readonly Lazy<Book> b = new Lazy<Book>(() => new Book()); // Used for a Singleton Design
-        public static Book Instance { get { return b.Value; } } // Used for a Singleton Design
-        BooksWindow BW; // Used for BW.WriteToConsole(...)
+        private readonly TextFileHandler TFH = TextFileHandler.Instance;
+        private static readonly Lazy<Book> b = new Lazy<Book>(() => new Book());
+        public static Book Instance { get { return b.Value; } }
+        BooksWindow BW;
 
-        private List<string> Lines = new List<string>(); // Holdes the GetAllRawLines for faster use
+        private List<string> Lines = new List<string>();
 
-        public string BookName { get; set; } // The Book's Name - Mendatory
-        public string Genre { get; set; } // The Genre - Mendatory
-        public DateTime Published { get; set; } // The date which the book was published at
-        public string Author { get; set; } // The Author's name
-        public string ImgURL { get; set; } // Holdes a Url for the image to be displayed
-        public BitmapImage Img { get; set; } // Holdes a BitmapImage, usually used for external use in an actual need of a Image
-        public int Quantity { get; set; } // The quantity of this book in the library
-        private Book() { } // Used for a Singleton Design
-        public Book(Book book) 
+        public string BookName { get; set; }
+        public string Genre { get; set; }
+        public DateTime Published { get; set; }
+        public string Publisher { get; set; }
+        public string ImgURL { get; set; }
+        public BitmapImage Img { get; set; }
+        public int Quantity { get; set; }
+
+        private Book() { }
+        public Book(Book book)
         {
-            //ctor
-
             this.BookName = book.BookName;
             this.Published = book.Published;
-            this.Author = book.Author;
-            this.ImgURL = MFH.GetImagePathFromFolder(Path.GetFileName(book.ImgURL));
+            this.Publisher = book.Publisher;
+            this.ImgURL = TFH.GetImagePathFromFolder(Path.GetFileName(book.ImgURL));
             this.Genre = book.Genre;
             this.Quantity = book.Quantity;
         }
-        public Book(string BookName, string Genre, DateTime? Published = null, string Author = null, string ImgURL = null, int Quantity = 1) 
+        public Book(string BookName, string Genre, DateTime? Published = null, string Publisher = null, string ImgURL = null, int Quantity = 1)
         {
-            //ctor
-
             this.BookName = BookName;
             this.Published = Published ?? DateTime.Now;
-            this.Author = Author;
-            this.ImgURL = MFH.GetImagePathFromFolder(Path.GetFileName(ImgURL));
+            this.Publisher = Publisher;
+            this.ImgURL = TFH.GetImagePathFromFolder(Path.GetFileName(ImgURL));
             this.Genre = Genre;
             this.Quantity = Quantity;
 
         }
-        public Book(string BookName, string Genre, DateTime? Published = null, string Author = null, BitmapImage Img = null, int Quantity = 1) 
+        public Book(string BookName, string Genre, DateTime? Published = null, string Publisher = null, BitmapImage Img = null, int Quantity = 1)
         {
-            //ctor
-
             this.BookName = BookName;
             this.Published = Published ?? DateTime.Now;
-            this.Author = Author;
+            this.Publisher = Publisher;
             this.Img = Img;
             this.Genre = Genre;
             this.Quantity = Quantity;
         }
+
         public void AddBook(Book newBook)
         {
-            // After receiving a new book to add, checks if any other book has the same name,genre and author
-            // Only if non has the same values, will add the book to the text file
-
-            BW = Application.Current.Windows.OfType<BooksWindow>().First(); // Inorder to WriteToConsole
+            BW = Application.Current.Windows.OfType<BooksWindow>().First();
             UpdateBooksLinesList();
-            if (!MFH.CheckLineExistens($"שם:{newBook.BookName}", Paths.booksFile) |
-                !MFH.CheckLineExistens($"ז'אנר:{newBook.Genre}", Paths.booksFile) |
-                !MFH.CheckLineExistens($"מחבר:{newBook.Author}", Paths.booksFile))
+            if (!TFH.CheckLineExistens($"שם:{newBook.BookName}", Paths.booksFile))
             {
-                Lines.Add($"שם:{newBook.BookName}\n["); // name
-                Lines.Add($"ז'אנר:{newBook.Genre}"); // genre
-                Lines.Add($"הוצל\"א:{newBook.Published.ToShortDateString()}"); // published
-                Lines.Add($"מחבר:{newBook.Author}"); // author
-                Lines.Add($"תמונה:{newBook.ImgURL}"); // imgurl
-                Lines.Add($"כמות:{newBook.Quantity}\n]"); // quantity
-                BW.WriteToConsole("נוסף הספר - " + newBook.BookName); // printing to the console that the book has been added
+                Lines.Add($"שם:{newBook.BookName}\n[");
+                Lines.Add($"ז'אנר:{newBook.Genre}");
+                Lines.Add($"הוצל\"א:{newBook.Published.ToShortDateString()}");
+                Lines.Add($"מוצל\"א:{newBook.Publisher}");
+                Lines.Add($"תמונה:{newBook.ImgURL}");
+                Lines.Add($"כמות:{newBook.Quantity}\n]");
+                BW.WriteToConsole("נוסף הספר - " + newBook.BookName);
+            }
+            else if (!TFH.CheckLineExistens($"מוצל\"א:{newBook.Publisher}", Paths.booksFile))
+            {
+                Lines.Add($"שם:{newBook.BookName}\n[");
+                Lines.Add($"ז'אנר:{newBook.Genre}");
+                Lines.Add($"הוצל\"א:{newBook.Published.ToShortDateString()}");
+                Lines.Add($"מוצל\"א:{newBook.Publisher}");
+                Lines.Add($"תמונה:{newBook.ImgURL}");
+                Lines.Add($"כמות:{newBook.Quantity}\n]");
+                BW.WriteToConsole("נוסף הספר - " + newBook.BookName);
             }
             else
-                MessageBox.Show($"הספר {newBook.BookName} כבר קיים במערכת"); // the book is already in the system
-            MFH.OverrideFile(Lines, Paths.booksFile);
+                BW.WriteToConsole($"הספר {newBook.BookName} כבר קיים במערכת");
+            TFH.OverrideFile(Lines, Paths.booksFile);
             UpdateBooksLinesList();
         }
+
         public void DeleteBook(Book book)
         {
-            // When deleting a Book, the function will firstly go through all students
-            // And if one of them borrowed the book, it will delete it from him
-
-            if (MFH.CheckLineExistens($"שם:{book.BookName}", Paths.booksFile))
+            if (TFH.CheckLineExistens($"שם:{book.BookName}", Paths.booksFile))
             {
-                // This part is the one that removes the book from all the students
-
-                bool inMid = false, studentHasBook = false, sinMid = false;
-                Student s = Student.Instance;
-                s.UpdateStudentsLinesList();
-                s.Lines.ForEach(line => {
-                    if (line.Equals($"שם הספר:{book.BookName}"))
-                        studentHasBook = true;
-                });
-                List<string> newList = new List<string>(), UpdatingStudentsBooks = new List<string>();
-                if (studentHasBook)
+                bool inMid = false;
+                List<string> newList = new List<string>();
+                foreach (string line in TFH.GetAllRawLines(Paths.booksFile))
                 {
-                    foreach (var innerLine in s.Lines)
-                    {
-                        if (innerLine.IndexOf($"שם הספר:{book.BookName}") >= 0)
-                        {
-                            sinMid = true;
-                            continue;
-                        }
-                        if (sinMid)
-                        {
-                            if (innerLine.Contains("תאריך השאלה:"))
-                            {
-                                sinMid = false;
-                                continue;
-                            }
-                        }
-                        else
-                            UpdatingStudentsBooks.Add(innerLine);
-                    }
-                    MFH.OverrideFile(UpdatingStudentsBooks, Paths.studentsFile);
-                }
-
-                foreach (string line in MFH.GetAllRawLines(Paths.booksFile))
-                {
-                    // This is part where the book is actually being removed
-
                     if (line.Equals($"שם:{book.BookName}"))
+                    {
                         inMid = true;
+                    }
 
                     if (inMid)
                     {
-                        if (line.Equals("]"))
+                        if (line.Equals(']'))
                         {
                             inMid = false;
                             continue;
@@ -163,19 +131,14 @@ namespace DigitalLibrary.Models.Classes.Common
                     else
                         newList.Add(line);
                 }
-                MFH.OverrideFile(newList, Paths.booksFile);
+                TFH.OverrideFile(newList, Paths.booksFile);
                 UpdateBooksLinesList();
             }
         }
         public void DeleteBook(string bookName)
         {
-            // When deleting a Book, the function will firstly go through all students
-            // And if one of them borrowed the book, it will delete it from him
-
-            if (MFH.CheckLineExistens($"שם:{bookName}", Paths.booksFile))
+            if (TFH.CheckLineExistens($"שם:{bookName}", Paths.booksFile))
             {
-                // This part is the one that removes the book from all the students
-
                 bool inMid = false, studentHasBook = false, sinMid = false;
                 Student s = Student.Instance;
                 s.UpdateStudentsLinesList();
@@ -204,13 +167,10 @@ namespace DigitalLibrary.Models.Classes.Common
                         else
                             UpdatingStudentsBooks.Add(innerLine);
                     }
-                    MFH.OverrideFile(UpdatingStudentsBooks,Paths.studentsFile);
+                    TFH.OverrideFile(UpdatingStudentsBooks,Paths.studentsFile);
                 }
-
-                foreach (string line in MFH.GetAllRawLines(Paths.booksFile))
+                foreach (string line in TFH.GetAllRawLines(Paths.booksFile))
                 {
-                    // This is part where the book is actually being removed
-
                     if (line.Equals($"שם:{bookName}"))
                         inMid = true;
 
@@ -225,40 +185,37 @@ namespace DigitalLibrary.Models.Classes.Common
                     else
                         newList.Add(line);
                 }
-                MFH.OverrideFile(newList, Paths.booksFile);
+                TFH.OverrideFile(newList, Paths.booksFile);
                 UpdateBooksLinesList();
             }
         }
+
         public void UpdateInfo(Book preBook, Book newBook)
         {
-            // The function recives two books, the one that you want to change, and the book that you change it for
-            // (Usually it is just the same book with updated information)
-
-            foreach (var line in MFH.GetAllRawLines(Paths.studentsFile))
+            foreach (var line in TFH.GetAllRawLines(Paths.studentsFile))
             {
                 if (line.Equals($"שם הספר:{preBook.BookName}"))
-                    MFH.OverrideAllLine($"שם הספר:{newBook.BookName}",
-                        $"שם הספר:{preBook.BookName}",
+                    TFH.OverrideLine($"שם הספר:{preBook.BookName}",
+                        $"שם הספר:{newBook.BookName}",
                         Paths.studentsFile);
             }
-            if (MFH.CheckLineExistens($"שם:{preBook.BookName}", Paths.booksFile))
+            if (TFH.CheckLineExistens($"שם:{preBook.BookName}", Paths.booksFile))
             {
                 bool inMid = false, bookAdded = false;
                 List<string> newList = new List<string>();
-                foreach (string line in MFH.GetAllRawLines(Paths.booksFile))
+                foreach (string line in TFH.GetAllRawLines(Paths.booksFile))
                 {
                     if (line.Contains($"שם:{preBook.BookName}"))
                         inMid = true;
 
                     if (inMid)
                     {
-                        
                         if (!bookAdded)
                         {
                             newList.AddRange(GetNewBook(newBook));
                             bookAdded = true;
                         }
-                        if (line.Equals("]"))
+                        if (line.Equals(']'))
                         {
                             inMid = false;
                             continue;
@@ -267,69 +224,66 @@ namespace DigitalLibrary.Models.Classes.Common
                     else
                         newList.Add(line);
                 }
-                MFH.OverrideFile(newList, Paths.booksFile);
+                TFH.OverrideFile(newList, Paths.booksFile);
                 UpdateBooksLinesList();
             }
         }
-        private void UpdateBooksLinesList() { Lines = MFH.GetAllRawLines(Paths.booksFile); } // Updates the Lines list with the books file lines
+
         public List<string> GetNewBook(Book newBook)
         {
-            // Returns a List<string> which contains the book that is passed to it
-            // (Pasing a book inside will result in a return of the information of that book)
-
             UpdateBooksLinesList();
             List<string> newLines = new List<string>();
-            if (!MFH.CheckLineExistens($"שם:{newBook.BookName}", Paths.booksFile))
+            if (!TFH.CheckLineExistens($"שם:{newBook.BookName}", Paths.booksFile))
             {
                 newLines.Add($"שם:{newBook.BookName}\n[");
                 newLines.Add($"ז'אנר:{newBook.Genre}");
                 newLines.Add($"הוצל\"א:{newBook.Published.ToShortDateString()}");
-                newLines.Add($"מחבר:{newBook.Author}");
+                newLines.Add($"מוצל\"א:{newBook.Publisher}");
                 newLines.Add($"תמונה:{newBook.ImgURL}");
                 newLines.Add($"כמות:{newBook.Quantity}\n]");
             }
-            else if (!MFH.CheckLineExistens($"ז'אנר:{newBook.Genre}", Paths.booksFile))
+            else if (!TFH.CheckLineExistens($"ז'אנר:{newBook.Genre}", Paths.booksFile))
             {
                 newLines.Add($"שם:{newBook.BookName}\n[");
                 newLines.Add($"ז'אנר:{newBook.Genre}");
                 newLines.Add($"הוצל\"א:{newBook.Published.ToShortDateString()}");
-                newLines.Add($"מחבר:{newBook.Author}");
+                newLines.Add($"מוצל\"א:{newBook.Publisher}");
                 newLines.Add($"תמונה:{newBook.ImgURL}");
                 newLines.Add($"כמות:{newBook.Quantity}\n]");
             }
-            else if (!MFH.CheckLineExistens($"הוצל\"א:{newBook.Published}", Paths.booksFile))
+            else if (!TFH.CheckLineExistens($"הוצל\"א:{newBook.Published}", Paths.booksFile))
             {
                 newLines.Add($"שם:{newBook.BookName}\n[");
                 newLines.Add($"ז'אנר:{newBook.Genre}");
                 newLines.Add($"הוצל\"א:{newBook.Published.ToShortDateString()}");
-                newLines.Add($"מחבר:{newBook.Author}");
+                newLines.Add($"מוצל\"א:{newBook.Publisher}");
                 newLines.Add($"תמונה:{newBook.ImgURL}");
                 newLines.Add($"כמות:{newBook.Quantity}\n]");
             }
-            else if (!MFH.CheckLineExistens($"מחבר:{newBook.Author}", Paths.booksFile))
+            else if (!TFH.CheckLineExistens($"הוצל\"מ:{newBook.Publisher}", Paths.booksFile))
             {
                 newLines.Add($"שם:{newBook.BookName}\n[");
                 newLines.Add($"ז'אנר:{newBook.Genre}");
                 newLines.Add($"הוצל\"א:{newBook.Published.ToShortDateString()}");
-                newLines.Add($"מחבר:{newBook.Author}");
+                newLines.Add($"מוצל\"א:{newBook.Publisher}");
                 newLines.Add($"תמונה:{newBook.ImgURL}");
                 newLines.Add($"כמות:{newBook.Quantity}\n]");
             }
-            else if (!MFH.CheckLineExistens($"תמונה:{newBook.ImgURL}", Paths.booksFile))
+            else if (!TFH.CheckLineExistens($"תמונה:{newBook.ImgURL}", Paths.booksFile))
             {
                 newLines.Add($"שם:{newBook.BookName}\n[");
                 newLines.Add($"ז'אנר:{newBook.Genre}");
                 newLines.Add($"הוצל\"א:{newBook.Published.ToShortDateString()}");
-                newLines.Add($"מחבר:{newBook.Author}");
+                newLines.Add($"מוצל\"א:{newBook.Publisher}");
                 newLines.Add($"תמונה:{newBook.ImgURL}");
                 newLines.Add($"כמות:{newBook.Quantity}\n]");
             }
-            else if (!MFH.CheckLineExistens($"כמות:{newBook.Quantity}", Paths.booksFile))
+            else if (!TFH.CheckLineExistens($"כמות:{newBook.Quantity}", Paths.booksFile))
             {
                 newLines.Add($"שם:{newBook.BookName}\n[");
                 newLines.Add($"ז'אנר:{newBook.Genre}");
                 newLines.Add($"הוצל\"א:{newBook.Published.ToShortDateString()}");
-                newLines.Add($"מחבר:{newBook.Author}");
+                newLines.Add($"מוצל\"א:{newBook.Publisher}");
                 newLines.Add($"תמונה:{newBook.ImgURL}");
                 newLines.Add($"כמות:{newBook.Quantity}\n]");
             }
@@ -337,8 +291,6 @@ namespace DigitalLibrary.Models.Classes.Common
         }
         public List<Book> GetBooksList()
         {
-            // Return a list of all the books
-
             List<Book> newList = new List<Book>();
             UpdateBooksLinesList();
             foreach (var line in Lines)
@@ -350,9 +302,7 @@ namespace DigitalLibrary.Models.Classes.Common
         }
         public Book GetBookByInfo(string info)
         {
-            // Return the first book which contains the given information
-
-            string BookName = null, Author = null, ImgURL = null, genre = null, infoHolder = (string)info;
+            string BookName = null, Publisher = null, ImgURL = null, genre = null, infoHolder = (string)info;
             DateTime Published = new DateTime(1, 1, 1);
             int Quantity = 1;
             bool inMid = false;
@@ -374,8 +324,8 @@ namespace DigitalLibrary.Models.Classes.Common
                                 genre = line.Substring(6);
                             else if (line.Contains("הוצל\"א:"))
                                 Published = DateTime.Parse(DateTime.Parse(line.Substring(7)).ToShortDateString());
-                            else if (line.Contains("מחבר:"))
-                                Author = line.Substring(5);
+                            else if (line.Contains("מוצל\"א:"))
+                                Publisher = line.Substring(7);
                             else if (line.Contains("תמונה:"))
                                 ImgURL = line.Substring(6);
                             else if (line.Contains("כמות:"))
@@ -386,7 +336,7 @@ namespace DigitalLibrary.Models.Classes.Common
                         }
                     }
                 }
-                return new Book(BookName, genre, Published, Author, ImgURL, Quantity);
+                return new Book(BookName, genre, Published, Publisher, ImgURL, Quantity);
             }
             else if (info.ToString().Contains("ז'אנר:"))
             {
@@ -401,7 +351,7 @@ namespace DigitalLibrary.Models.Classes.Common
                         }
                         if (inMid)
                         {
-                            foreach (var inerline in Lines.Skip(MFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 2))
+                            foreach (var inerline in Lines.Skip(TFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 2))
                             {
                                 if (inerline.Contains("שם:"))
                                     genre = inerline.Substring(3);
@@ -409,8 +359,8 @@ namespace DigitalLibrary.Models.Classes.Common
                                     genre = inerline.Substring(6);
                                 else if (inerline.Contains("הוצל\"א:"))
                                     Published = DateTime.Parse(DateTime.Parse(inerline.Substring(7)).ToShortDateString());
-                                else if (inerline.Contains("מחבר:"))
-                                    Author = inerline.Substring(5);
+                                else if (inerline.Contains("מוצל\"א:"))
+                                    Publisher = inerline.Substring(7);
                                 else if (inerline.Contains("תמונה:"))
                                     ImgURL = inerline.Substring(6);
                                 else if (inerline.Contains("כמות:"))
@@ -436,7 +386,7 @@ namespace DigitalLibrary.Models.Classes.Common
                         }
                         if (inMid)
                         {
-                            foreach (var inerline in Lines.Skip(MFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 3))
+                            foreach (var inerline in Lines.Skip(TFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 3))
                             {
                                 if (inerline.Contains("שם:"))
                                     genre = inerline.Substring(3);
@@ -444,8 +394,8 @@ namespace DigitalLibrary.Models.Classes.Common
                                     genre = inerline.Substring(6);
                                 else if (inerline.Contains("הוצל\"א:"))
                                     Published = DateTime.Parse(DateTime.Parse(inerline.Substring(7)).ToShortDateString());
-                                else if (inerline.Contains("מחבר:"))
-                                    Author = inerline.Substring(5);
+                                else if (inerline.Contains("מוצל\"א:"))
+                                    Publisher = inerline.Substring(7);
                                 else if (inerline.Contains("תמונה:"))
                                     ImgURL = inerline.Substring(6);
                                 else if (inerline.Contains("כמות:"))
@@ -458,7 +408,7 @@ namespace DigitalLibrary.Models.Classes.Common
                     }
                 }
             }
-            else if (info.ToString().Contains("מחבר:"))
+            else if (info.ToString().Contains("מוצל\"א:"))
             {
                 foreach (var line in Lines)
                 {
@@ -471,7 +421,7 @@ namespace DigitalLibrary.Models.Classes.Common
                         }
                         if (inMid)
                         {
-                            foreach (var inerline in Lines.Skip(MFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 4))
+                            foreach (var inerline in Lines.Skip(TFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 4))
                             {
                                 if (inerline.Contains("שם:"))
                                     genre = inerline.Substring(3);
@@ -479,8 +429,8 @@ namespace DigitalLibrary.Models.Classes.Common
                                     genre = inerline.Substring(6);
                                 else if (inerline.Contains("הוצל\"א:"))
                                     Published = DateTime.Parse(DateTime.Parse(inerline.Substring(7)).ToShortDateString());
-                                else if (inerline.Contains("מחבר:"))
-                                    Author = inerline.Substring(5);
+                                else if (inerline.Contains("מוצל\"א:"))
+                                    Publisher = inerline.Substring(7);
                                 else if (inerline.Contains("תמונה:"))
                                     ImgURL = inerline.Substring(6);
                                 else if (inerline.Contains("כמות:"))
@@ -506,7 +456,7 @@ namespace DigitalLibrary.Models.Classes.Common
                         }
                         if (inMid)
                         {
-                            foreach (var inerline in Lines.Skip(MFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 5))
+                            foreach (var inerline in Lines.Skip(TFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 5))
                             {
                                 if (inerline.Contains("שם:"))
                                     genre = inerline.Substring(3);
@@ -514,8 +464,8 @@ namespace DigitalLibrary.Models.Classes.Common
                                     genre = inerline.Substring(6);
                                 else if (inerline.Contains("הוצל\"א:"))
                                     Published = DateTime.Parse(DateTime.Parse(inerline.Substring(7)).ToShortDateString());
-                                else if (inerline.Contains("מחבר:"))
-                                    Author = inerline.Substring(5);
+                                else if (inerline.Contains("מוצל\"א:"))
+                                    Publisher = inerline.Substring(7);
                                 else if (inerline.Contains("תמונה:"))
                                     ImgURL = inerline.Substring(6);
                                 else if (inerline.Contains("כמות:"))
@@ -541,7 +491,7 @@ namespace DigitalLibrary.Models.Classes.Common
                         }
                         if (inMid)
                         {
-                            foreach (var inerline in Lines.Skip(MFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 6))
+                            foreach (var inerline in Lines.Skip(TFH.GetSpecificLineNum(infoHolder, Paths.booksFile) - 6))
                             {
                                 if (inerline.Contains("שם:"))
                                     genre = inerline.Substring(3);
@@ -549,8 +499,8 @@ namespace DigitalLibrary.Models.Classes.Common
                                     genre = inerline.Substring(6);
                                 else if (inerline.Contains("הוצל\"א:"))
                                     Published = DateTime.Parse(DateTime.Parse(inerline.Substring(7)).ToShortDateString());
-                                else if (inerline.Contains("מחבר:"))
-                                    Author = inerline.Substring(5);
+                                else if (inerline.Contains("מוצל\"א:"))
+                                    Publisher = inerline.Substring(7);
                                 else if (inerline.Contains("תמונה:"))
                                     ImgURL = inerline.Substring(6);
                                 else if (inerline.Contains("כמות:"))
@@ -565,5 +515,7 @@ namespace DigitalLibrary.Models.Classes.Common
             }
             return null;
         }
+
+        private void UpdateBooksLinesList() { Lines = TFH.GetAllRawLines(Paths.booksFile); }
     }
 }

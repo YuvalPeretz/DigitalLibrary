@@ -93,12 +93,12 @@
                 Orientation="Horizontal"
                 Margin="0,10">
                 <Label 
-                    x:Name="L_Author"
-                    Content="מחבר:"
+                    x:Name="L_Publisher"
+                    Content="מוצל''א:"
                     FontSize="20"
                     Padding="0,0,28,0"/>
                 <TextBox
-                    x:Name="TB_Author"
+                    x:Name="TB_Publisher"
                     Width="200"
                     Height="25"
                     FontSize="20"

@@ -21,32 +21,34 @@ namespace DigitalLibrary.Views.Windows.Mains.Books
     /// </summary>
     public partial class BooksFindStudent : Window
     {
-        MainFilesHandler MFH = MainFilesHandler.Instance;
-        BooksWindow BW;
+        TextFileHandler TFH = TextFileHandler.Instance;
         public BooksFindStudent()
         {
             InitializeComponent();
-            BW = Application.Current.Windows.OfType<BooksWindow>().First();
         }
 
         private void BTN_SearchStudent_Click(object sender, RoutedEventArgs e)
         {
-            // Goes thorugh all the students and searching for those which have the chosen book
-            // Prints it out afterwords
-
-            if (MFH.CheckLineExistens($"שם:{TB_SearchStudent.Text}", Paths.booksFile))
+            if (TFH.CheckLineExistens($"שם:{TB_SearchStudent.Text}", Paths.booksFile))
             {
-                if (MFH.CheckLineExistens($"שם הספר:{TB_SearchStudent.Text}", Paths.studentsFile))
+                if (TFH.CheckLineExistens($"שם הספר:{TB_SearchStudent.Text}", Paths.studentsFile))
                 {
-                    string studentsWhoHasBook = null, currentStudentname = null;
-                    foreach (var line in MFH.GetAllRawLines(Paths.studentsFile))
+                    string studentName = null;
+                    bool outOfBooks = false;
+                    List<string> lines = File.ReadAllLines(Paths.studentsFile).ToList();
+                    for (int i = TFH.GetSpecificLineNum($"שם הספר:{TB_SearchStudent.Text}", Paths.studentsFile); i != 0; i--)
                     {
-                        if (line.Contains($"שם:"))
-                            currentStudentname = line.Substring(line.IndexOf(":") + 1);
-                        if (line.Equals($"שם הספר:{TB_SearchStudent.Text}"))
-                            studentsWhoHasBook += currentStudentname + "\n";
+                        if (outOfBooks)
+                        {
+                            if (lines[i].Contains("שם:"))
+                            {
+                                studentName = lines[i].Substring(lines[i].IndexOf(":")+1);
+                            }
+                        }
+                        if (lines[i].Equals("{"))
+                            outOfBooks = true;
                     }
-                    BW.WriteToConsole($"הספר '{TB_SearchStudent.Text}' הושאל על ידי התלמידים:\n{studentsWhoHasBook}");
+                    MessageBox.Show($"שם התלמיד שהשאיל את הספר הוא: {studentName}");
                 }
                 else
                     MessageBox.Show("ספר זה לא קיים אצל שום תלמיד במערכת");

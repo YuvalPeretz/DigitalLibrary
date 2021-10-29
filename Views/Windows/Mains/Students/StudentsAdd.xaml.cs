@@ -25,7 +25,7 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         public StudentsAdd()
         {
             InitializeComponent();
-
+            
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -39,8 +39,6 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         }
         private void BTN_AddStudent_Click(object sender, RoutedEventArgs e)
         {
-            // Adds a student to the file
-
             var preItem = new object();
             Label DataLabel;
             if (TB_PhoneNumber.Text.Count() >= 10)
@@ -111,8 +109,6 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         }
         private void TB_PhoneNumber_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Restrict the TB_PhoneNumber to be numbers only
-
             e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
         }
     }

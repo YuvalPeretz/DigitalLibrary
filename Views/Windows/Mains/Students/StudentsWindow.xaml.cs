@@ -24,18 +24,17 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
     public partial class StudentsWindow : Window
     {
         Window MW,SA,SL,SD,SIU,SLB,SRB;
-        MainFilesHandler MFH = MainFilesHandler.Instance;
+        TextFileHandler TFH = TextFileHandler.Instance;
         public StudentsWindow()
         {
             InitializeComponent();
             InitializeTempFiles();
         }
-        private void InitializeTempFiles() { MFH.InitializeFiles(WriteToConsole); } // Making sure all the main files exist
+        private void InitializeTempFiles() { TFH.InitializeFiles(WriteToConsole); }
         private void BTN_ShowStudents_Click(object sender, RoutedEventArgs e)
         {
             if (!Application.Current.Windows.OfType<StudentsList>().Any())
             {
-                Mouse.OverrideCursor = Cursors.Wait;
                 SL = new StudentsList
                 {
                     Tag = "mdi_child"
@@ -60,7 +59,6 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         {
             if (!Application.Current.Windows.OfType<StudentDelete>().Any())
             {
-                Mouse.OverrideCursor = Cursors.Wait;
                 SD = new StudentDelete
                 {
                     Tag = "mdi_child"
@@ -73,7 +71,6 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         {
             if (!Application.Current.Windows.OfType<StudentsInfoUpdate.StudentsInfoUpdate>().Any())
             {
-                Mouse.OverrideCursor = Cursors.Wait;
                 SIU = new StudentsInfoUpdate.StudentsInfoUpdate
                 {
                     Tag = "mdi_child"
@@ -86,7 +83,6 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         {
             if (!Application.Current.Windows.OfType<StudentsLendBook.StudentsLendBook>().Any())
             {
-                Mouse.OverrideCursor = Cursors.Wait;
                 SLB = new StudentsLendBook.StudentsLendBook
                 {
                     Tag = "mdi_child"
@@ -99,7 +95,6 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         {
             if (!Application.Current.Windows.OfType<StudentsReturnBook>().Any())
             {
-                Mouse.OverrideCursor = Cursors.Wait;
                 SRB = new StudentsReturnBook
                 {
                     Tag = "mdi_child"
@@ -109,9 +104,7 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         }
         public void WriteToConsole(string text)
         {
-            // Writes down to this window's console the string that is being passed
-
-            ConsoleText CS = new ConsoleText(text + "\n");
+            ConsoleText CS = new ConsoleText(text);
             SP_Console.Children.Add(CS);
         }
         private void BTN_Exit_Click(object sender, RoutedEventArgs e)

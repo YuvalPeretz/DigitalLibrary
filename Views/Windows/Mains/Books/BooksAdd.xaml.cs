@@ -21,27 +21,26 @@ namespace DigitalLibrary.Views.Windows.Mains.Books
 {
     public partial class BooksAdd : Window
     {
-        MainFilesHandler MFH = MainFilesHandler.Instance;
+        TextFileHandler TFH = TextFileHandler.Instance;
         string filePath = "";
         public BooksAdd()
         {
             InitializeComponent();
             DP_Published.SelectedDate = DateTime.Parse("1/1/1000");
         }
-
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
                 this.DragMove();
         }
+
         private void BTN_Exit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
         private void BTN_FilePicker_Click(object sender, RoutedEventArgs e)
         {
-            // In case of choosing a different image, this function handels the file picking process
-
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.Multiselect = false;
             dlg.Filter = "Image Files(*.jpg; *.jpeg; *.gif; *.bmp)|*.jpg; *.jpeg; *.gif; *.bmp";
@@ -53,18 +52,14 @@ namespace DigitalLibrary.Views.Windows.Mains.Books
                 L_Beforehand.Padding = new Thickness(0);
             }
         }
+
         private void TB_Quantity_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Limits the TB_Quantity to numbers only
-
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
         private void BTN_AddBook_Click(object sender, RoutedEventArgs e)
         {
-            // Adding a book to the file
-            // The adding process is Task related
-
             var preItem = new object();
             Label DataLabel;
             foreach (var spi in MainSP.Children.OfType<StackPanel>())
@@ -82,7 +77,7 @@ namespace DigitalLibrary.Views.Windows.Mains.Books
                                 DataLabel = (Label)preItem;
                                 if (DataLabel.Content.Equals("שם הספר:"))
                                     DataLabel.Foreground = new SolidColorBrush(Colors.Red);
-                                if (DataLabel.Content.Equals("מחבר:"))
+                                if (DataLabel.Content.Equals("מוצל''א:"))
                                     DataLabel.Foreground = new SolidColorBrush(Colors.Green);
                             }
                             else
@@ -146,7 +141,7 @@ namespace DigitalLibrary.Views.Windows.Mains.Books
             {
                 if (
                     L_Published.Foreground.ToString() != Brushes.Black.ToString() ||
-                    L_Author.Foreground.ToString() != Brushes.Black.ToString() ||
+                    L_Publisher.Foreground.ToString() != Brushes.Black.ToString() ||
                     L_Beforehand.Foreground.ToString() != Brushes.Black.ToString() ||
                     L_BookQuantity.Foreground.ToString() != Brushes.Black.ToString())
                 {
@@ -155,30 +150,30 @@ namespace DigitalLibrary.Views.Windows.Mains.Books
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
-                        string tempBookName = TB_BookName.Text, tempGenre = CB_BookGenre.Text, tempAuthor = null, tempFileName = null;
+                        string tempBookName = TB_BookName.Text, tempGenre = CB_BookGenre.Text, tempPublisher = null, tempFileName = null;
                         DateTime tempPublished = DateTime.Now;
                         int tempQuantity = 1;
                         if (L_Published.Foreground.ToString() == Brushes.Black.ToString())
                             tempPublished = DateTime.Parse(DP_Published.SelectedDate.Value.Date.ToShortDateString());
-                        if (L_Author.Foreground.ToString() == Brushes.Black.ToString())
-                            tempAuthor = TB_Author.Text;
+                        if (L_Publisher.Foreground.ToString() == Brushes.Black.ToString())
+                            tempPublisher = TB_Publisher.Text;
                         if (L_Beforehand.Foreground.ToString() == Brushes.Black.ToString())
                             tempFileName = filePath;
                         if (L_BookQuantity.Foreground.ToString() == Brushes.Black.ToString())
                             tempQuantity = Int32.Parse(TB_Quantity.Text);
-                        MFH.AddToImageFile(filePath);
+                        TFH.AddToImageFile(filePath);
                         Book newBook = new Book(
                             tempBookName,
                             tempGenre,
                             tempPublished,
-                            tempAuthor,
+                            tempPublisher,
                             tempFileName,
                             tempQuantity
                             );
                         newBook.AddBook(newBook);
                         TB_BookName.Text = String.Empty;
                         DP_Published.SelectedDate = DateTime.Parse("1/1/1000");
-                        TB_Author.Text = String.Empty;
+                        TB_Publisher.Text = String.Empty;
                         TB_FileImage.Source = null;
                         TB_Quantity.Text = "1";
                         return;
@@ -186,18 +181,18 @@ namespace DigitalLibrary.Views.Windows.Mains.Books
                 }
                 else
                 {
-                    MFH.AddToImageFile(filePath);
+                    TFH.AddToImageFile(filePath);
                     Book newBook = new Book(
                         TB_BookName.Text,
                         CB_BookGenre.Text,
                         DateTime.Parse(DP_Published.SelectedDate.Value.Date.ToShortDateString()),
-                        TB_Author.Text,
+                        TB_Publisher.Text,
                         filePath,
                         Int32.Parse(TB_Quantity.Text));
                     newBook.AddBook(newBook);
                     TB_BookName.Text = String.Empty;
                     DP_Published.SelectedDate = DateTime.Parse("1/1/1");
-                    TB_Author.Text = String.Empty;
+                    TB_Publisher.Text = String.Empty;
                     TB_FileImage.Source = null;
                     TB_Quantity.Text = "1";
                     return;

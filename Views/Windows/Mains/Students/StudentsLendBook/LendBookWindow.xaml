@@ -47,19 +47,17 @@
                 Margin="10,0,10,0"
                 Width="100"
                 FontSize="15"
-                IsEnabled="False"
                 SelectedIndex="0">
                 <ComboBoxItem FontSize="15" Content="שם ספר"/>
                 <ComboBoxItem FontSize="15" Content="ז'אנר"/>
                 <ComboBoxItem FontSize="15" Content="הוצל''א"/>
-                <ComboBoxItem FontSize="15" Content="מחבר"/>
+                <ComboBoxItem FontSize="15" Content="מוצל''א"/>
                 <ComboBoxItem FontSize="15" Content="כמות"/>
             </ComboBox>
             <TextBox
                 x:Name="TB_SearchBox"
                 Width="250"
                 FontSize="15"
-                IsEnabled="False"
                 HorizontalContentAlignment="Left"
                 VerticalContentAlignment="Center"
                 TextChanged="TB_SearchBox_TextChanged"/>
@@ -93,7 +91,7 @@
                     <DataGridTextColumn Binding="{Binding BookName}" Header="שם ספר"/>
                     <DataGridTextColumn Binding="{Binding Genre}" Header="ז'אנר"/>
                     <DataGridTextColumn Binding="{Binding Published, StringFormat=d}" Header="הוצל''א"/>
-                    <DataGridTextColumn Binding="{Binding Author}" Header="מחבר"/>
+                    <DataGridTextColumn Binding="{Binding Publisher}" Header="מוצל''א"/>
                     <DataGridTextColumn Binding="{Binding Quantity}" Header="כמות"/>
                 </DataGrid.Columns>
             </DataGrid>

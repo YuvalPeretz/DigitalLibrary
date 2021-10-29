@@ -1,5 +1,4 @@
-﻿using DigitalLibrary.Models.Classes.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,19 +9,15 @@ using System.Windows;
 
 namespace DigitalLibrary.Models.Classes.Useable
 {
-    public sealed class StaticInformationHandler : TextHandlerBase
+    public sealed class StaticInformationHandler
     {
-        // This class is used for the static files, such as the backup files, and the staticInformation file
-
         private static readonly Lazy<StaticInformationHandler> SIH = new Lazy<StaticInformationHandler>(() => new StaticInformationHandler());
         public static StaticInformationHandler Instance { get { return SIH.Value; } }
-        MainFilesHandler MFH = MainFilesHandler.Instance;
+        TextFileHandler TFH = TextFileHandler.Instance;
         private StaticInformationHandler() { }
 
-        public override void InitializeFiles()
+        public void InitializeMainTemp()
         {
-            // Initialize the files
-
             Directory.CreateDirectory(Paths.tempDL);
             if (!File.Exists(Paths.tempDLFile))
             {
@@ -39,11 +34,9 @@ namespace DigitalLibrary.Models.Classes.Useable
         }
         public void TriggerBackup()
         {
-            // This function trigers the backup, by making sure all the files are created and backup all the information
-            
             Directory.CreateDirectory(Paths.BA_tempDir);
             Directory.CreateDirectory(Paths.BA_imgDir);
-            MFH.BackupImages();
+            TFH.BackupImages();
             if (!File.Exists(Paths.BA_bFile))
             {
                 File.Create(Paths.BA_bFile).Dispose();
@@ -60,26 +53,78 @@ namespace DigitalLibrary.Models.Classes.Useable
                 File.WriteAllText(Paths.BA_sFile, File.ReadAllText(Paths.studentsFile));
         }
 
-        public void WriteToFile(string TXTToWrite)  { WriteToFile(TXTToWrite, Paths.tempDLFile); } // Overrload of the base function, just calls it with the static temp
-        public void DeleteLine(string TXTToDelete) { DeleteLines(TXTToDelete, Paths.tempDLFile); } // Overrload of the base function, just calls it with the static temp
-
-        public void OverrideFile(List<string> LinesToWrite) { OverrideFile(LinesToWrite, Paths.tempDLFile); } // Overrload of the base function, just calls it with the static temp
-        public void OverrideLine(string newLine, string oldLine) { OverrideLine(newLine, oldLine, Paths.tempDLFile); } // Overrload of the base function, just calls it with the static temp
-
-        public bool CheckLineExistens(string LineToCheck) { return CheckLineExistens(LineToCheck,Paths.tempDLFile); } // Overrload of the base function, just calls it with the static temp
-        public bool CheckWordExistens(string WordToCheck) { return CheckWordExistens(WordToCheck, Paths.tempDLFile); } // Overrload of the base function, just calls it with the static temp
-
-        public List<string> GetAllRawLines() { return GetAllRawLines(Paths.tempDLFile); } // Overrload of the base function, just calls it with the static temp
-        public string GetValueAfterEqual(string Header)
+        public void WriteToFile(string TXTToWrite) { File.AppendAllText(Paths.tempDLFile, TXTToWrite); }
+        public void DeleteLine(string TXTToDelete) // deletes the text that was entered, MUST ENTER EACH LINE AGAIN!
         {
-            // Returns the information of a line by its header after its header
+            try
+            {
+                string item = TXTToDelete.Trim();
+                var lines = File.ReadAllLines(Paths.tempDLFile).Where(line => line.Trim() != item).ToArray(); // creates an array with all the lines except for the line with the text.
+                File.WriteAllLines(Paths.tempDLFile, lines); // re-writing all the lines.
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"ERROR: {e}");
+            }
+            
+        }
 
+        public void OverrideFile(List<string> LinesToWrite)
+        {
+            File.WriteAllText(Paths.tempDLFile, String.Empty);
+            File.WriteAllLines(Paths.tempDLFile, LinesToWrite);
+        }
+        public void OverrideLine(string newLine, string oldLine)
+        {
+            DeleteLine(oldLine);
+            WriteToFile($"{newLine}");
+        }
+
+        public bool CheckLineExistens(string LineToCheck)
+        {
+            if (File.ReadAllLines(Paths.tempDLFile).Contains(LineToCheck))
+                return true;
+            return false;
+        }
+        public bool CheckWordExistens(string WordToCheck)
+        {
+            foreach (var line in File.ReadAllLines(Paths.tempDLFile))
+            {
+                if (line.Contains(WordToCheck))
+                    return true;
+            }
+            return false;
+        }
+
+        public List<string> GetAllRawLines()
+        {
+            List<string> AllLines = new List<string>();
+            foreach (var line in File.ReadAllLines(Paths.tempDLFile))
+            {
+                AllLines.Add(line);
+            }
+            return AllLines;
+        }
+        public string GetPartOfLine(string Header)
+        {
             foreach (var line in File.ReadAllLines(Paths.tempDLFile))
             {
                 if (line.Contains(Header))
                     return line.Substring(line.IndexOf("=") + 1);
             }
             return null;
+        }
+
+        public int GetSpecificLineNum(string LineToCheck, string FilePath)
+        {
+            int lineNum = 0;
+            foreach (var line in File.ReadAllLines(FilePath))
+            {
+                lineNum++;
+                if (line.Equals(LineToCheck))
+                    return lineNum;
+            }
+            return lineNum;
         }
     }
 }

@@ -22,7 +22,8 @@ namespace DigitalLibrary.Views.Windows.Tutorials
     {
         List<Page> Pages = new List<Page>();
         int currentPageIndex = 0;
-        BitmapImage // Initialize the arrows images
+        //@"/DigitalLibrary;component/Resources/Images/Back_Off_Icon.png"
+        BitmapImage
             btn_back_img_off = new BitmapImage(new Uri(@"pack://application:,,,/Resources/Images/Back_Off_Icon.png")),
             btn_back_img_on = new BitmapImage(new Uri(@"pack://application:,,,/Resources/Images/Back_On_Icon.png")),
             btn_next_img_off = new BitmapImage(new Uri(@"pack://application:,,,/Resources/Images/Next_Off_Icon.png")),
@@ -33,12 +34,11 @@ namespace DigitalLibrary.Views.Windows.Tutorials
             InitializePages();
             MainFrame.Content = Pages[currentPageIndex];
             UpdateArrows();
+
         }
 
         private void InitializePages()
         {
-            // Initialize the Pages List to contain all of thew pages
-
             Pages.Add(new WelcomePage());
             Pages.Add(new MainWindowPage());
             Pages.Add(new BooksWindowPage());
@@ -50,8 +50,6 @@ namespace DigitalLibrary.Views.Windows.Tutorials
 
         private void UpdateArrows()
         {
-            // Every click, the arrows will be updated according to the situation
-
             if (currentPageIndex != 0 & currentPageIndex != Pages.Count() - 1)
             {
                 BTN_Next.IsEnabled = true;

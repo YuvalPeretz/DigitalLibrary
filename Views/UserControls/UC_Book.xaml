@@ -23,7 +23,7 @@
         <TextBlock x:Name="TB_BookGenre"
                    FontSize="20"
                    Margin="5,0"/>
-        <TextBlock x:Name="TB_BookAuthor"
+        <TextBlock x:Name="TB_BookPublisher"
                    FontSize="20"
                    Margin="5,0"/>
         <TextBlock x:Name="TB_BookPublished"

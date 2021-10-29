@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -40,12 +37,7 @@ namespace DigitalLibrary.Views.Windows.Mains.Settings.Info
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            // Opens the internet with a mail sending website to contact the developer
 
-            Process.Start(@"https://mail.google.com/mail/?view=cm&fs=1&to=yuvalperetzj@gmail.com
-                &su=ספרייה דיגיטלית - עזרה
-                &body=יש לרשום את המייל כאן
-                &bcc=נא לרשום כאן את כתובת המייל");
         }
     }
 }

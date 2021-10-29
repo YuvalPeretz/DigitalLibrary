@@ -21,7 +21,7 @@ namespace DigitalLibrary.Views.UserControls
     /// </summary>
     public partial class UC_Book : UserControl
     {
-        public UC_Book(string BookName, string Genre, DateTime? Published = null, string Author = null, string ImgURL = null, int Quantity = 1)
+        public UC_Book(string BookName, string Genre, DateTime? Published = null, string Publisher = null, string ImgURL = null, int Quantity = 1)
         {
             InitializeComponent();
             BitmapImage logo = new BitmapImage();
@@ -30,7 +30,7 @@ namespace DigitalLibrary.Views.UserControls
             TB_BookName.Text = BookName;
             TB_BookGenre.Text = Genre;
             TB_BookPublished.Text = Published.ToString();
-            TB_BookAuthor.Text = Author;
+            TB_BookPublisher.Text = Publisher;
             TB_BookQuantity.Text = Quantity.ToString();
         }
 
@@ -43,7 +43,7 @@ namespace DigitalLibrary.Views.UserControls
             TB_BookName.Text = book.BookName;
             TB_BookGenre.Text = book.Genre;
             TB_BookPublished.Text = book.Published.ToString();
-            TB_BookAuthor.Text = book.Author;
+            TB_BookPublisher.Text = book.Publisher;
             TB_BookQuantity.Text = book.Quantity.ToString();
         }
     }

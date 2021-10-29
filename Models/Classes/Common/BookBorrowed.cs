@@ -8,9 +8,6 @@ namespace DigitalLibrary.Models.Classes.Common
 {
     public class BookBorrowed
     {
-        // This class represents a Borrowed book
-        // Each borrowed book has 2 properties, a Name and a Date which the book was lent at
-
         public string BookName { get; set; }
         public DateTime BookLendDate { get; set; }
         public BookBorrowed(string BookName)

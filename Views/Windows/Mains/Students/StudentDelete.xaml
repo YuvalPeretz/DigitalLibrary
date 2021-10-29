@@ -47,7 +47,6 @@
                 Margin="10,0,10,0"
                 Width="100"
                 FontSize="15"
-                IsEnabled="False"
                 SelectedIndex="0">
                 <ComboBoxItem FontSize="15" Content="שם"/>
                 <ComboBoxItem FontSize="15" Content="טלפון"/>
@@ -56,7 +55,6 @@
                 x:Name="TB_SearchBox"
                 Width="250"
                 FontSize="15"
-                IsEnabled="False"
                 HorizontalContentAlignment="Left"
                 VerticalContentAlignment="Center"
                 TextChanged="TB_SearchBox_TextChanged"/>

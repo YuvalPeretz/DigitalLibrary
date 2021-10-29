@@ -14,7 +14,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace DigitalLibrary.Views.Windows.Mains.Students
 {
@@ -23,7 +22,7 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
     /// </summary>
     public partial class StudentsReturnBook : Window
     {
-        ObservableCollection<Student> OCStudents = new ObservableCollection<Student>();
+        ObservableCollection<Student> OBStudents = new ObservableCollection<Student>();
         CollectionViewSource StudentsCollection;
         Predicate<object> yourCostumFilter;
         ICollectionView Itemlist;
@@ -32,56 +31,22 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         ComboBox CB;
         Book b = Book.Instance;
         BookBorrowed borrowedBookDate, borrowedBookHolder;
-        Task<ObservableCollection<Student>> tOCStudents;
         public StudentsReturnBook()
         {
-            SW = Application.Current.Windows.OfType<StudentsWindow>().First();
-            InitializeObservableCollection();
-            Counter();
             InitializeComponent();
-        }
-        private async void Counter()
-        {
-            // If the loading of the OCStudents (which are the students list) haven't finished in 1.7 seconds
-            // A message will be printed to the console saying it is still loading
-
-            await Task.Delay(1700);
-            if (!tOCStudents.IsCompleted)
-                SW.WriteToConsole("טוען תלמידים, נא להמתין.");
+            InitializeObservableCollection();
+            SW = Application.Current.Windows.OfType<StudentsWindow>().First();
         }
         private void InitializeObservableCollection()
         {
-            // Firstly, the function clears the OCStudents from any information
-            // After that, a task will start returning the updated OCBooks
-            // After the complition of the task, a setup for the UI will start
-            // The use of the task is because we don't want it to freeze the UI
-
-            if (OCStudents.Count != 0)
-                OCStudents.Clear();
-            tOCStudents = Task.Run(() =>
-            {
-                foreach (var student in s.GetStudentList())
-                    OCStudents.Add(student);
-                return OCStudents;
-            });
-            tOCStudents.GetAwaiter().OnCompleted(() =>
-            {
-                Mouse.OverrideCursor = null;
-                StudentsCollection = new CollectionViewSource { Source = OCStudents };
-                Itemlist = StudentsCollection.View;
-                DG_StudentsList.ItemsSource = Itemlist;
-                CB_Filter.IsEnabled = true;
-            });
+            if (OBStudents.Count != 0)
+                OBStudents.Clear();
+            foreach (var item in s.GetStudentList())
+                OBStudents.Add(item);
+            StudentsCollection = new CollectionViewSource { Source = OBStudents };
+            Itemlist = StudentsCollection.View;
+            DG_StudentsList.ItemsSource = Itemlist;
         }
-
-        private void RefreshItemList()
-        {
-            // Refreshes the items in the ObservableCollection
-
-            Itemlist.Filter = yourCostumFilter;
-            Itemlist.Refresh();
-        }
-
         private void BTN_Exit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -93,8 +58,6 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
         }
         private void TB_SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Refrshes the ObservableCollection to filter only chosen items
-
             if (CB_Filter.SelectedIndex == 0)
                 yourCostumFilter = new Predicate<object>(item => ((Student)item).Name.Contains(TB_SearchBox.Text));
             else if (CB_Filter.SelectedIndex == 1)
@@ -112,44 +75,26 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
 
         private void BTN_ReturnBook_Click(object sender, RoutedEventArgs e)
         {
-            // Removes the book from the student, and then Updates the books info to have +1 in its quantity
-
             if (borrowedBookHolder != null)
             {
                 Student selectedStudent = (Student)DG_StudentsList.SelectedItem;
                 List<BookBorrowed> borrowedBooks = selectedStudent.BorrowedBooks;
                 borrowedBooks.RemoveAll(b => b.BookName == borrowedBookHolder.BookName);
-                Student selectedStudentUpdated = new Student(selectedStudent.Id,selectedStudent.Name, selectedStudent.PhoneNum, borrowedBooks);
-                Task tUpdateStudent = Task.Run(()=> 
-                {
-                    s.UpdateInfo(selectedStudent, selectedStudentUpdated);
-                });
-                tUpdateStudent.GetAwaiter().OnCompleted(()=> 
-                {
-                    Book updatedBook = b.GetBookByInfo($"שם:{borrowedBookHolder.BookName}");
-                    updatedBook.Quantity++;
-                    Task tUpdateBook = Task.Run(()=> 
-                    {
-                        b.UpdateInfo(b.GetBookByInfo($"שם:{borrowedBookHolder.BookName}"), updatedBook);
-                    });
-                    tUpdateBook.GetAwaiter().OnCompleted(()=> 
-                    {
-                        SW.WriteToConsole($"הספר {borrowedBookHolder.BookName} נמחק בהצלחה מהתלמיד {selectedStudent.Name}");
-                        if (CB.Items.Count == 0)
-                            BTN_ShowDate.Visibility = Visibility.Hidden;
-                    });
-                });
+                Student selectedStudentUpdated = new Student(selectedStudent.Name, selectedStudent.PhoneNum, borrowedBooks);
+                s.UpdateInfo(selectedStudent, selectedStudentUpdated);
+                Book updatedBook = b.GetBookByInfo($"שם:{borrowedBookHolder.BookName}");
+                updatedBook.Quantity++;
+                b.UpdateInfo(b.GetBookByInfo($"שם:{borrowedBookHolder.BookName}"), updatedBook);
+                SW.WriteToConsole($"הספר {borrowedBookHolder.BookName} נמחק בהצלחה מהתלמיד {selectedStudent.Name}");
+                if (CB.Items.Count == 0)
+                    BTN_ShowDate.Visibility = Visibility.Hidden;
             }
             else
                 SW.WriteToConsole("שום ספר לא נבחר");
-            Task.WaitAll();
-            RefreshItemList();
+            InitializeObservableCollection();
         }
         private void CB_BookName_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Everytime the selected item is changed, the focused borrowedbook will be changed
-            // This happens in order for the display of the borrowed date to be able to desplay
-
             CB = (ComboBox)sender;
             borrowedBookHolder = (BookBorrowed)CB.SelectedItem;
             borrowedBookDate = s.GetBorrowedBookInfo((Student)DG_StudentsList.SelectedItem, borrowedBookHolder.BookName);
@@ -158,8 +103,6 @@ namespace DigitalLibrary.Views.Windows.Mains.Students
 
         private void ShowDate_Click(object sender, RoutedEventArgs e)
         {
-            // Shows the actual borrowed date
-
             MessageBox.Show(borrowedBookDate.BookLendDate.ToShortDateString());
         }
     }

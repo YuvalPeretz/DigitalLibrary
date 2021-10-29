@@ -28,22 +28,19 @@ namespace DigitalLibrary.Views.Windows.Mains.Settings
     public partial class SettingsWindow : Window
     {
         StaticInformationHandler SIH = StaticInformationHandler.Instance;
-        MainFilesHandler MFH = MainFilesHandler.Instance;
+        TextFileHandler TFH = TextFileHandler.Instance;
         Window IF;
         public SettingsWindow()
         {
             InitializeComponent();
-            if (SIH.CheckWordExistens("tutorial")) // Resets the tutorial checkbox to the actual value that is in the static file
-                CB_TutorialEnable.IsChecked = bool.Parse(SIH.GetValueAfterEqual("tutorial"));
+            if (SIH.CheckWordExistens("tutorial"))
+                CB_TutorialEnable.IsChecked = bool.Parse(SIH.GetPartOfLine("tutorial"));
             TutorialCheck();
-            Task tBackup = Task.Run(()=>SIH.TriggerBackup());
-            tBackup.Wait();
+            SIH.TriggerBackup();
         }
 
         private void TutorialCheck()
         {
-            // Resets the value of the tutorial in the static file to the one in the checkbox
-
             if (SIH.CheckLineExistens("tutorial=true"))
                 SIH.DeleteLine("tutorial=true");
             else if (SIH.CheckLineExistens("tutorial=false"))
@@ -69,17 +66,13 @@ namespace DigitalLibrary.Views.Windows.Mains.Settings
         }
         private void BTN_FilePicker_Click(object sender, RoutedEventArgs e)
         {
-            // Loads a File picker for the user to change the location of the main files
-            // In case the user chose to change the location, all of the main files and their data will be trasformed to that location
-            // In case the user chose an existing file with all the files in it, a backup loading will be triggered
-            // And will transfer all the data in those files into the current main files
 
             if (!Directory.Exists(Paths.tempDirectory) ||
             !Directory.Exists(Paths.imgDirectory) ||
             !File.Exists(Paths.studentsFile) ||
             !File.Exists(Paths.booksFile))
             {
-                MFH.InitializeFilesWithoutWriting();
+                TFH.InitializeFilesWithoutWriting();
             }
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             string
@@ -198,8 +191,8 @@ namespace DigitalLibrary.Views.Windows.Mains.Settings
             }
         }
         private void CB_TutorialEnable_Click(object sender, RoutedEventArgs e) { TutorialCheck(); }
-        private void BTN_OpenBackup_Click(object sender, RoutedEventArgs e) { System.Diagnostics.Process.Start(Paths.BA_tempDir); } // Opens up the backup files
+        private void BTN_OpenBackup_Click(object sender, RoutedEventArgs e) { System.Diagnostics.Process.Start(Paths.BA_tempDir); }
 
-        private void BTN_OpenInfoDirectory_Click(object sender, RoutedEventArgs e) { System.Diagnostics.Process.Start(Paths.tempDirectory); } // Opens up the main files
+        private void BTN_OpenInfoDirectory_Click(object sender, RoutedEventArgs e) { System.Diagnostics.Process.Start(Paths.tempDirectory); }
     }
 }

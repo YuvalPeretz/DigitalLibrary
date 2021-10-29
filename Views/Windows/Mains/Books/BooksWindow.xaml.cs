@@ -23,7 +23,7 @@ namespace DigitalLibrary.Views.Windows.Mains
     public partial class BooksWindow : Window
     {
         Window MW,BL,BA,BD,BIU,BFS;
-        MainFilesHandler MFH = MainFilesHandler.Instance;
+        TextFileHandler TFH = TextFileHandler.Instance;
 
         public BooksWindow()
         {
@@ -31,7 +31,7 @@ namespace DigitalLibrary.Views.Windows.Mains
             InitializeTempFiles();
         }
 
-        private void InitializeTempFiles() { MFH.InitializeFiles(WriteToConsole); } // Making sure all the main files exist
+        private void InitializeTempFiles() { TFH.InitializeFiles(WriteToConsole); }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -49,7 +49,6 @@ namespace DigitalLibrary.Views.Windows.Mains
         {
             if (!Application.Current.Windows.OfType<BooksList>().Any())
             {
-                Mouse.OverrideCursor = Cursors.Wait;
                 BL = new BooksList
                 {
                     Tag = "mdi_child"
@@ -74,7 +73,6 @@ namespace DigitalLibrary.Views.Windows.Mains
         {
             if (!Application.Current.Windows.OfType<BooksDelete>().Any())
             {
-                Mouse.OverrideCursor = Cursors.Wait;
                 BD = new BooksDelete
                 {
                     Tag = "mdi_child"
@@ -87,7 +85,6 @@ namespace DigitalLibrary.Views.Windows.Mains
         {
             if (!Application.Current.Windows.OfType<BooksInfoUpdate>().Any())
             {
-                Mouse.OverrideCursor = Cursors.Wait;
                 BIU = new BooksInfoUpdate
                 {
                     Tag = "mdi_child"
@@ -98,9 +95,7 @@ namespace DigitalLibrary.Views.Windows.Mains
 
         public void WriteToConsole(string text)
         {
-            // Writes down to this window's console the string that is being passed
-
-            ConsoleText CS = new ConsoleText(text + "\n");
+            ConsoleText CS = new ConsoleText(text);
             SP_Console.Children.Add(CS);
         }
         private void BTN_FindStudent_Click(object sender, RoutedEventArgs e)
